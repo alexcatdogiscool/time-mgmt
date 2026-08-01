@@ -2,6 +2,7 @@ from events import Event, EventBuilder
 from db import *
 from events import *
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from contextlib import asynccontextmanager
@@ -13,8 +14,16 @@ async def lifespan(app: FastAPI):
     init_db()
     yield
 
+################################################
 
 app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/events")
 def recv_event(event: dict):

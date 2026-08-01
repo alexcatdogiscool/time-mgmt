@@ -14,6 +14,11 @@ class Event:
     created_at: datetime = field(default_factory=(lambda: datetime.now(timezone.utc)))
     updated_at: datetime = field(default_factory=(lambda: datetime.now(timezone.utc)))
 
+    def __post_init__(self):
+        if self.timestamp.tzinfo is None:
+            raise ValueError("timestamp must be timezone-aware")
+        self.timestamp = self.timestamp.astimezone(timezone.utc)
+
     def to_dict(self) -> dict:
         return {
             "id": self.id,
@@ -27,16 +32,21 @@ class Event:
 
     @classmethod
     def from_dict(cls, data: dict) -> "Event":
-        """Reconstruct from DB row / JSON."""
-        return cls(
-            id=data["id"],
-            activity=data["activity"],
-            label=data.get("label"),
-            timestamp=datetime.fromisoformat(data["timestamp"]),
-            note=data.get("note"),
-            created_at=datetime.fromisoformat(data["created_at"]),
-            updated_at=datetime.fromisoformat(data["updated_at"])
-        )
+        kwargs = {
+            "activity": data["activity"],
+            "label": data.get("label"),
+            "note": data.get("note"),
+        }
+        if "id" in data:
+            kwargs["id"] = data["id"]
+        if "timestamp" in data and data["timestamp"] is not None:
+            kwargs["timestamp"] = datetime.fromisoformat(data["timestamp"])
+        if "created_at" in data:
+            kwargs["created_at"] = datetime.fromisoformat(data["created_at"])
+        if "updated_at" in data:
+            kwargs["updated_at"] = datetime.fromisoformat(data["updated_at"])
+
+        return cls(**kwargs)
 
 
 

@@ -76,7 +76,7 @@ def get_from_timerange(start: datetime, end: datetime, db_path=DB_PATH) -> list[
 
     start_iso = start.isoformat()
     end_iso = end.isoformat()
-    
+
     with get_conn(db_path) as conn:
         rows = conn.execute(
             """
@@ -85,10 +85,12 @@ def get_from_timerange(start: datetime, end: datetime, db_path=DB_PATH) -> list[
 
             UNION ALL
 
-            SELECT * FROM events
-            WHERE timestamp < :start
-            ORDER BY timestamp DESC
-            LIMIT 1
+            SELECT * FROM (
+                SELECT * FROM events
+                WHERE timestamp < :start
+                ORDER BY timestamp DESC
+                LIMIT 1
+            )
             """,
             {"start": start_iso, "end": end_iso},
         ).fetchall()
