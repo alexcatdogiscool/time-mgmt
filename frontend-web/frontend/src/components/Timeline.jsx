@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getTimeline } from "../api";
+import { ACTIVITIES, colorForActivity } from "../activities";
 
 const COLORS = {
   work: "#4a7c59",
@@ -34,7 +35,7 @@ export default function Timeline({ date }) {
             title={`${seg.activity}${seg.label ? `: ${seg.label}` : ""}`}
             style={{
               width: `${widthPct}%`,
-              backgroundColor: COLORS[seg.activity] ?? "#ccc",
+              backgroundColor: colorForActivity(seg.activity),
             }}
           />
         );

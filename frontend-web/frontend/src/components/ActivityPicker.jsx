@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { postEvent } from "../api";
-
-const ACTIVITIES = ["Uni Work", "programming", "internet", "sleeping", "chores", "chilling", "unknown", "youtube"];
+import { ACTIVITIES } from "../activities";
 
 export default function ActivityPicker({ onLogged }) {
     const [customLabel, setCustomLabel] = useState("");
