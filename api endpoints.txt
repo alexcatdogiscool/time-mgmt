@@ -1,0 +1,6 @@
+POST   /events              { activity, timestamp?, label?, note? }   -- timestamp defaults to now()
+GET    /events?date=...                                                -- raw events, for editing
+PATCH  /events/:id          { activity?, timestamp?, label? }
+DELETE /events/:id
+GET    /timeline?date=YYYY-MM-DD                                       -- computed segments
+GET    /stats?from=&to=&granularity=day|week                           -- aggregated durations per activity
