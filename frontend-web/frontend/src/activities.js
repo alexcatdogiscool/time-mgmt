@@ -1,5 +1,6 @@
 export const ACTIVITIES = [
   "work",
+  "Uni work",
   "programming",
   "internet",
   "sleeping",
