@@ -9,9 +9,9 @@ LOCAL_TZ = ZoneInfo("Pacific/Auckland")
 url = "http://127.0.0.1:8000/events"
 
 e = (EventBuilder()
-     .with_activity("unknown")
+     .with_activity("sleeping")
      .with_note("backfill the db :p")
-     .with_timestamp(datetime.combine(datetime.now(), time.min).astimezone(LOCAL_TZ))
+     .with_timestamp((datetime.combine(datetime.now(), time.min) - timedelta(hours=0, minutes=30)).astimezone(LOCAL_TZ))
      .build())
 
 payload = e.to_dict()

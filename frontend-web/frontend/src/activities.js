@@ -6,19 +6,21 @@ export const ACTIVITIES = [
   "sleeping",
   "chores",
   "chilling",
+  "Productive ",
   "unknown",
 ];
 
-function hashString(str) {
+function hashString(str, theme = "") {
+  const combined = str + theme;
   let hash = 5381;
-  for (let i = 0; i < str.length; i++) {
-    hash = (hash * 33) ^ str.charCodeAt(i);
+  for (let i = 0; i < combined.length; i++) {
+    hash = (hash * 33) ^ combined.charCodeAt(i);
   }
-  return hash >>> 0; // force unsigned 32-bit int
+  return hash >>> 0;
 }
 
-export function colorForActivity(activity) {
-    const hash = hashString(activity);
-    const hue = hash % 360;
-    return `hsl(${hue}, 65%, 54%)`;
+export function colorForActivity(activity, theme = "") {
+  const hash = hashString(activity, theme);
+  const hue = hash % 360;
+  return `hsl(${hue}, 65%, 55%)`;
 }

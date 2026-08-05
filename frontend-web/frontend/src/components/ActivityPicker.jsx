@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { postEvent } from "../api";
-import { ACTIVITIES } from "../activities";
+import { ACTIVITIES, colorForActivity } from "../activities";
 
-export default function ActivityPicker({ onLogged }) {
+export default function ActivityPicker({ onLogged, theme }) {
     const [customLabel, setCustomLabel] = useState("");
     const [showLabelInput, setShowLabelInput] = useState(false);
 
@@ -17,7 +17,7 @@ export default function ActivityPicker({ onLogged }) {
 
     async function handleUnknownSubmit() {
         if (!customLabel.trim()) return;
-        await postEvent({ activity: "unkniwn", label: customLabel.trim() });
+        await postEvent({ activity: "unknown", label: customLabel.trim() });
         setCustomLabel("");
         setShowLabelInput(false);
         onLogged?.();
@@ -25,9 +25,14 @@ export default function ActivityPicker({ onLogged }) {
 
     return (
     <div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "8px" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "4px", width: "100%" }}>
         {ACTIVITIES.map((activity) => (
-          <button key={activity} onClick={() => handleClick(activity)}>
+          <button style={{
+            backgroundColor: colorForActivity(activity, theme),
+            flex: "1 1 100px",
+            padding: "20px 10px"
+            }} 
+            key={activity} onClick={() => handleClick(activity)}>
             {activity}
           </button>
         ))}

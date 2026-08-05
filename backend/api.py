@@ -3,6 +3,7 @@ from db import *
 from events import *
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from contextlib import asynccontextmanager
@@ -63,3 +64,5 @@ def get_timeline(date: str):
         seg["end"] = seg["end"].astimezone(LOCAL_TZ).isoformat()
 
     return {"date": date, "segments": segments}
+
+app.mount("/", StaticFiles(directory="../frontend/dist", html=True), name="frontend")
