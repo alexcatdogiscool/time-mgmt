@@ -65,4 +65,4 @@ def get_timeline(date: str):
 
     return {"date": date, "segments": segments}
 
-app.mount("/", StaticFiles(directory="../frontend/dist", html=True), name="frontend")
+app.mount("/", StaticFiles(directory="../frontend-web/frontend/dist", html=True), name="frontend")
