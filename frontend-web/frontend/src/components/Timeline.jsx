@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getTimeline } from "../api";
 import { colorForActivity } from "../activities";
+import EditSeg from "./EditSeg";
 
 function formatDuration(startMs, endMs) {
   const totalMinutes = Math.round((endMs - startMs) / 1000 / 60);
@@ -9,8 +10,21 @@ function formatDuration(startMs, endMs) {
   return `${hours}h ${minutes}m`;
 }
 
+const handleClick = (seg) => {
+  editSeg(seg);
+}
+
 export default function Timeline({ date, theme }) {
   const [segments, setSegments] = useState([]);
+  const [editingSeg, setEditingSeg] = useState(null);
+
+  function refresh() {
+    getTimeline(date).then((data) => setSegments(data.segments));
+  }
+
+  useEffect(() => {
+    refresh();
+  }, [date]);
 
   useEffect(() => {
     getTimeline(date).then((data) => setSegments(data.segments));
@@ -39,6 +53,7 @@ export default function Timeline({ date, theme }) {
           <div
             key={i}
             title={`${seg.activity}${'\n'}${formatDuration(startMs, endMs)}${seg.label ? `: ${seg.label}` : ""}`}
+            onClick={() => setEditingSeg(seg)}
             style={{
               position: "absolute",
               left: `${leftPct}%`,
@@ -50,6 +65,16 @@ export default function Timeline({ date, theme }) {
           />
         );
       })}
+      {editingSeg && (
+        <EditSeg
+          seg={editingSeg}
+          onClose={() => setEditingSeg(null)}
+          onSaved={() => {
+            setEditingSeg(null);
+            refresh();
+          }}
+        />
+      )}
     </div>
   );
 }

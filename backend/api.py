@@ -33,6 +33,14 @@ def recv_event(event: dict):
     insert_event(e)
     return e.to_dict()
 
+@app.patch("/events/{id}")
+def update_event(id: str, event: dict):
+    try:
+        updated = edit_by_id(id, event)
+    except ValueError:
+        raise HTTPException(404, f"No event with id {id}")
+    return updated.to_dict()
+
 @app.get("/timeline")
 def get_timeline(date: str):
     try:

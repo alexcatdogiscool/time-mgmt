@@ -50,6 +50,47 @@ def init_db(db_path=DB_PATH):
         conn.executescript(SCHEMA)
         conn.commit()
 
+def get_by_id(id: str, db_path=DB_PATH) -> Event:
+    with get_conn(db_path) as conn:
+        row = conn.execute(
+            """
+                SELECT * FROM events WHERE id = (?)
+            """,
+            (id,),
+        ).fetchone()
+        if row is None:
+            return None
+        return Event.from_dict(dict(row))
+
+def edit_by_id(id: str, event: dict, db_path=DB_PATH) -> Event:
+    with get_conn(db_path) as conn:
+        current = get_by_id(id, db_path=db_path)
+        if current is None:
+            raise ValueError(f"No event with id {id}")
+
+        if event.get("activity") is not None:
+            current.activity = event["activity"]
+        if "label" in event:
+            current.label = event["label"]  # allows explicit clearing to None
+        if event.get("timestamp") is not None:
+            current.timestamp = datetime.fromisoformat(event["timestamp"])
+
+        current_dict = current.to_dict()
+        conn.execute(
+            """
+            UPDATE events
+            SET activity = ?, label = ?, timestamp = ?
+            WHERE id = ?
+            """,
+            (current_dict["activity"], current_dict["label"], current_dict["timestamp"], id),
+        )
+        conn.commit()
+        return current
+
+    
+
+
+
 
 def insert_event(event: Event, db_path=DB_PATH):
     with get_conn(db_path) as conn:
@@ -106,6 +147,7 @@ def to_segments(events: list[Event], range_end: datetime) -> list[dict]:
     for i, event in enumerate(events):
         seg_end = events[i + 1].timestamp if i + 1 < len(events) else range_end
         segments.append({
+            "id": event.id,
             "activity": event.activity,
             "label": event.label,
             "start": event.timestamp,

@@ -18,3 +18,12 @@ export async function getTimeline(date) {
     });
     return res.data;
 }
+
+export async function updateEvent(id, { activity, label, timestamp }) {
+  const res = await axios.patch(`${API_BASE}/events/${id}`, {
+    activity,
+    label,
+    timestamp,
+  });
+  return res.data;
+}
