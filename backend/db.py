@@ -4,10 +4,14 @@ import os
 from contextlib import contextmanager
 from events import Event, EventBuilder
 from datetime import datetime, timezone
+import json
 
 file_path = Path(__file__).resolve().parent
 DB_NAME = "database.db"
 DB_PATH = os.path.join(file_path, DB_NAME)
+
+CALENDER_NAME = "calender.json"
+CALENDER_PATH = os.path.join(file_path, CALENDER_NAME)
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS events (
@@ -154,3 +158,10 @@ def to_segments(events: list[Event], range_end: datetime) -> list[dict]:
             "end": seg_end,
         })
     return segments
+
+
+def get_calender(calender_path=CALENDER_PATH):
+    with open(calender_path, 'r') as f:
+        data = json.load(f)
+
+        return data

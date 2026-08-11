@@ -1,0 +1,29 @@
+{
+    "mon" : {
+        "Uni work": 6,
+        "Chinese": 1
+    },
+    "tue" : {
+        "Uni work": 6,
+        "Chinese": 1
+    },
+    "wed" : {
+        "Uni work": 6,
+        "Chinese": 1
+    },
+    "thu" : {
+        "Uni work": 6,
+        "Chinese": 1
+    },
+    "fri" : {
+        "Uni work": 6,
+        "Chinese": 1
+    },
+    "sat" : {
+        "Chinese": 1
+    },
+    "sun" : {
+        "Chinese": 1
+    }
+    
+}

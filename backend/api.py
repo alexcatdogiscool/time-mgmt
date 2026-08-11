@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from datetime import datetime, timezone, timedelta
 from zoneinfo import ZoneInfo
 from contextlib import asynccontextmanager
+import json
 
 LOCAL_TZ = ZoneInfo("Pacific/Auckland")
 
@@ -72,5 +73,11 @@ def get_timeline(date: str):
         seg["end"] = seg["end"].astimezone(LOCAL_TZ).isoformat()
 
     return {"date": date, "segments": segments}
+
+@app.get("/calender")
+def get_calnder_route():
+    data = get_calender()
+    return data
+
 
 app.mount("/", StaticFiles(directory="../frontend-web/frontend/dist", html=True), name="frontend")
